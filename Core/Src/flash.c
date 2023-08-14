@@ -6,6 +6,7 @@
  */
 
 #include "flash.h"
+#include "message_handle.h"
 
 uint32_t power_page = 0;
 uint32_t control_mode_page = 1;
