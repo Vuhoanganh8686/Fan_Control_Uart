@@ -44,6 +44,7 @@ void mutate_power(POWER power){
 	 * @param power set value
 	 */
 	uint32_t* p_control_mode = (uint32_t*) ADDR_FLASH_PAGE_1;
+
 	uint32_t* p_wind_mode = (uint32_t*) ADDR_FLASH_PAGE_2;
 	uint32_t* p_power = (uint32_t*) ADDR_FLASH_PAGE_0;
 	if(*p_power != power){

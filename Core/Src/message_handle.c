@@ -4,6 +4,7 @@
  *  Created on: Aug 11, 2023
  *      Author: Acer
  */
+#include "flash.h"
 #include "message_handle.h"
 #include "stdint.h"
 #include <stdio.h>
@@ -12,14 +13,14 @@
 POWER power = OFF;
 WIND_MODE wind_mode = LEVEL_0;
 CONTROL_MODE control_mode = AUTOMATIC;
-int volatile temperature = 0;
+float volatile temperature = 0;
 
 
 uint8_t handle_message(unsigned char* received_buffer, unsigned char* sent_buffer) {
-    uint8_t* txRxID = received_buffer[1];
+    uint8_t* txRxID = received_buffer + 1;
     *sent_buffer = 0x02;
     uint8_t send_length;
-    uint8_t* stx =received_buffer;
+    uint8_t* stx = received_buffer;
     if(*stx != 0x02){
         send_length = 0;
         goto error_msg;
@@ -40,19 +41,19 @@ uint8_t handle_message(unsigned char* received_buffer, unsigned char* sent_buffe
         
         case FRAME_SELECT_MODE:
             process_control_mode_message(received_buffer, sent_buffer);
-             received_data_length = 1;
+            received_data_length = 1;
             sent_data_length = 1;
             break;
         
         case FRAME_SELECT_FAN_SPEED:
             process_wind_mode_message(received_buffer, sent_buffer);
-             received_data_length = 1;
+            received_data_length = 1;
             sent_data_length = 1;
             break;
         
         case FRAME_READ_STATUS:
             return process_states_request_message(received_buffer, sent_buffer);
-             received_data_length = 0;
+            received_data_length = 0;
             sent_data_length =  process_states_request_message(received_buffer, sent_buffer);
         
         default:
@@ -73,8 +74,7 @@ uint8_t handle_message(unsigned char* received_buffer, unsigned char* sent_buffe
 	*sent_ETX = 0x03;
 	send_length = sent_data_length + 4;
 
-    error_msg : printf("Length of buffer sent is : ", send_length);    
-    return 0; // No response needed
+    error_msg : return send_length;
 }
 
 void process_power_message(unsigned char* received_buffer, unsigned char* sent_buffer) {
@@ -172,7 +172,8 @@ uint8_t process_states_request_message(unsigned char* received_buffer, unsigned 
 }
 
 uint8_t check_message_data_length(unsigned char* received_buffer, uint8_t expected_value) {
-    if (received_buffer[2] == expected_value) {
+    uint8_t* length = received_buffer + 2;
+    if (*length == expected_value) {
         return 1; // Data length is correct
     } else {
         return 0; // Data length is incorrect
