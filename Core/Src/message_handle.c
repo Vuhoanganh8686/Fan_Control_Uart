@@ -13,11 +13,10 @@
 POWER power = OFF;
 WIND_MODE wind_mode = LEVEL_0;
 CONTROL_MODE control_mode = AUTOMATIC;
-float volatile temperature = 0;
 
 
 uint8_t handle_message(unsigned char* received_buffer, unsigned char* sent_buffer) {
-    uint8_t* txRxID = received_buffer + 1;
+
     *sent_buffer = 0x02;
     uint8_t send_length;
     uint8_t* stx = received_buffer;
@@ -26,7 +25,7 @@ uint8_t handle_message(unsigned char* received_buffer, unsigned char* sent_buffe
         goto error_msg;
     }
 
-    uint8_t* received_frame_type  = received_buffer + 1;
+    uint8_t* txRxID  = received_buffer + 1;
 	uint8_t* sent_frame_type = sent_buffer + 1;
 	uint8_t* p_sent_data_length = sent_buffer + 2;
 	uint8_t sent_data_length;

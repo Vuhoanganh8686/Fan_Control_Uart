@@ -137,6 +137,7 @@ int main(void)
   check_and_fix_variables();
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   HAL_TIM_Base_Start_IT(&htim8);
+  restart_before_state();
 
   /* USER CODE END 2 */
 

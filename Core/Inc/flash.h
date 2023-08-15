@@ -31,7 +31,9 @@ void mutate_wind_mode(WIND_MODE wind_mode);
 uint8_t get_power();
 uint8_t get_control_mode();
 uint8_t get_wind_mode();
+void wind_control(TIM_HandleTypeDef tim_handle, WIND_MODE wind_mode);
 void check_and_fix_variables();
+void restart_before_state();
 
 
 #endif /* INC_FLASH_H_ */

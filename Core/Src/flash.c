@@ -7,6 +7,7 @@
 
 #include "flash.h"
 #include "message_handle.h"
+#include "stdint.h"
 
 uint32_t power_page = 0;
 uint32_t control_mode_page = 1;
@@ -121,7 +122,7 @@ uint8_t get_wind_mode(){
 	return *p_wind_mode;
 }
 
-void wind_control(TIM_HandleTypeDef htim1, WIND_MODE wind_mode){
+void wind_control(TIM_HandleTypeDef tim_handle, WIND_MODE wind_mode){
 	/*
 	 * @brief Control PWM
 	 * @param tim_handler timer handler
@@ -129,13 +130,13 @@ void wind_control(TIM_HandleTypeDef htim1, WIND_MODE wind_mode){
 	 */
 	switch(wind_mode){
 	case LEVEL_0:
-		__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);
+		__HAL_TIM_SET_COMPARE(&tim_handle, TIM_CHANNEL_1, 0);
 		break;
 	case LEVEL_1:
-		__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 599);
+		__HAL_TIM_SET_COMPARE(&tim_handle, TIM_CHANNEL_1, 599);
 		break;
 	case LEVEL_2:
-		__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 799);
+		__HAL_TIM_SET_COMPARE(&tim_handle, TIM_CHANNEL_1, 799);
 		break;
 	}
 }
@@ -155,6 +156,15 @@ void check_and_fix_variables(){
 	}
 	if(*p_wind_mode != LEVEL_0 && *p_wind_mode != LEVEL_1 && *p_wind_mode != LEVEL_2){
 		mutate_wind_mode(LEVEL_0);
+	}
+}
+
+void restart_before_state(){
+	uint32_t* p_power = (uint32_t*) ADDR_FLASH_PAGE_0;
+	uint32_t* p_control_mode = (uint32_t*) ADDR_FLASH_PAGE_1;
+	uint32_t* p_wind_mode = (uint32_t*) ADDR_FLASH_PAGE_2;
+	if(*p_power == ON && *p_control_mode == MANUAL){
+		wind_control(htim1, *p_wind_mode);
 	}
 }
 
