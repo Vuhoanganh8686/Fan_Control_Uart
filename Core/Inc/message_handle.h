@@ -36,7 +36,7 @@ typedef enum{
 extern POWER power;
 extern WIND_MODE wind_mode;
 extern CONTROL_MODE control_mode;
-extern int volatile temperature;
+extern float volatile temperature;
 
 // Function to handle received message frames
 uint8_t handle_message(unsigned char* received_buffer, unsigned char* sent_buffer);
