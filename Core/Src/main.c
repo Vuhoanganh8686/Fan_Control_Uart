@@ -21,6 +21,7 @@
 #include "message_handle.h"
 #include "flash.h"
 #include "stdint.h"
+#include "test_flash.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
