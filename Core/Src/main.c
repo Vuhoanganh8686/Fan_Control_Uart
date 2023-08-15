@@ -80,8 +80,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   rawValue = HAL_ADC_GetValue(&hadc1);
   temp = ((float)rawValue) / 4095 * 3300;
   temperature = ((temp - 760.0) / 2.5) + 25;
-  uint32_t* p_control_mode = (uint32_t*) ADDR_FLASH_PAGE_0;
-  uint32_t* p_power = (uint32_t*) ADDR_FLASH_PAGE_0;
+  uint32_t* p_control_mode = (uint32_t*) ADDR_FLASH_PAGE_254;
+  uint32_t* p_power = (uint32_t*) ADDR_FLASH_PAGE_255;
   if(temp < 0){
     temperature = 0;
   }
@@ -135,6 +135,7 @@ int main(void)
   MX_TIM8_Init();
   /* USER CODE BEGIN 2 */
   flash_erase();
+  mutate_power(OFF);
   check_and_fix_variables();
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   HAL_TIM_Base_Start_IT(&htim8);
