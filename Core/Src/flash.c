@@ -9,10 +9,12 @@
 #include "message_handle.h"
 #include "stdint.h"
 
-uint32_t power_page = 0;
-uint32_t control_mode_page = 1;
-uint32_t wind_mode_page = 2;
+
 uint32_t p_error_page;
+
+uint32_t ADDR_FLASH_PAGE_255  = 0x0807F800;
+uint32_t ADDR_FLASH_PAGE_254  = 0x0807F000;
+uint32_t ADDR_FLASH_PAGE_253  = 0x0807E800;
 
 
 
@@ -45,7 +47,6 @@ void mutate_power(POWER power){
 	 * @param power set value
 	 */
 	uint32_t* p_control_mode = (uint32_t*) ADDR_FLASH_PAGE_254;
-
 	uint32_t* p_wind_mode = (uint32_t*) ADDR_FLASH_PAGE_253;
 	uint32_t* p_power = (uint32_t*) ADDR_FLASH_PAGE_255;
 	if(*p_power != power){
@@ -141,7 +142,7 @@ void wind_control(TIM_HandleTypeDef tim_handle, WIND_MODE wind_mode){
 	}
 }
 
-void check_and_fix_variables(){
+void default_state(){
 	/*
 	 *@brief check correctness of the flash memory storing state variables and fix
 	 */

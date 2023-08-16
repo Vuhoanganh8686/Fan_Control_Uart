@@ -52,6 +52,11 @@ TIM_HandleTypeDef htim8;
 UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
+
+extern uint32_t ADDR_FLASH_PAGE_255;
+extern uint32_t ADDR_FLASH_PAGE_254;
+extern uint32_t ADDR_FLASH_PAGE_253;
+
 float volatile temperature = 0;
 unsigned char receiveBuffer[5];
 unsigned char sendBuffer[9];
@@ -135,8 +140,8 @@ int main(void)
   MX_TIM8_Init();
   /* USER CODE BEGIN 2 */
   flash_erase();
-  mutate_power(OFF);
-  check_and_fix_variables();
+  //mutate_power(OFF);
+  default_state();
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   HAL_TIM_Base_Start_IT(&htim8);
   restart_before_state();
