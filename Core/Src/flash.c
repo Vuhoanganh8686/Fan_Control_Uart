@@ -12,9 +12,9 @@
 
 uint32_t p_error_page;
 
-uint32_t ADDR_FLASH_PAGE_255  = 0x0807F800;
-uint32_t ADDR_FLASH_PAGE_254  = 0x0807F000;
-uint32_t ADDR_FLASH_PAGE_253  = 0x0807E800;
+volatile uint32_t ADDR_FLASH_PAGE_255  = 0x08033000;
+volatile uint32_t ADDR_FLASH_PAGE_254  = 0x08032800;
+volatile uint32_t ADDR_FLASH_PAGE_253  = 0x08032000;
 
 
 

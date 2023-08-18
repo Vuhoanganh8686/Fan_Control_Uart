@@ -140,7 +140,7 @@ int main(void)
   MX_TIM8_Init();
   /* USER CODE BEGIN 2 */
   flash_erase();
-  //mutate_power(OFF);
+  mutate_power(OFF);
   default_state();
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   HAL_TIM_Base_Start_IT(&htim8);
