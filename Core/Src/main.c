@@ -89,15 +89,23 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
   if(*p_control_mode == AUTOMATIC && *p_power == ON){
     if(temperature < 20){
-      mutate_control_mode(LEVEL_2);
+      modify_control_mode(LEVEL_2);
     }
     else if (temperature < 30){
-      mutate_control_mode(LEVEL_1);
+      modify_control_mode(LEVEL_1);
     } 
     else {
-      mutate_control_mode(LEVEL_0);
+      modify_control_mode(LEVEL_0);
   }
  }
+}
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+  uint8_t length = handle_message(receiveBuffer, sendBuffer);
+    if(length != 0){
+      HAL_UART_Transmit_IT(&huart1, sendBuffer, length);
+    }
 }
 
 /* USER CODE END 0 */
@@ -136,6 +144,7 @@ int main(void)
   MX_TIM8_Init();
   /* USER CODE BEGIN 2 */
   flash_erase();
+  test_get();
   default_state();
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   HAL_TIM_Base_Start_IT(&htim8);
@@ -164,6 +173,7 @@ int main(void)
   }
   /* USER CODE END 3 */
 }
+
 
 /**
   * @brief System Clock Configuration

@@ -41,7 +41,7 @@ void flash_erase()
 	flash_erase_wind_mode_init.PageAddress = ADDR_FLASH_PAGE_100;
 }
 
-void mutate_power(POWER power){
+void modify_power(POWER power){
 	/*
 	 * @brief Mutate power variable
 	 * @param power set value
@@ -65,7 +65,7 @@ void mutate_power(POWER power){
 	}
 }
 
-void mutate_control_mode(CONTROL_MODE control_mode){
+void modify_control_mode(CONTROL_MODE control_mode){
 	/*
 	 * @brief mutate control mode variable
 	 * @control_mode set value
@@ -83,7 +83,7 @@ void mutate_control_mode(CONTROL_MODE control_mode){
 	}
 }
 
-void mutate_wind_mode(WIND_MODE wind_mode){
+void modify_wind_mode(WIND_MODE wind_mode){
 	/*
 	 * @brief mutate wind mode variable
 	 * @wind_mode set value
@@ -112,7 +112,7 @@ uint8_t get_control_mode(){
 	 * @return control mode
 	 */
 	uint32_t* p_control_mode = (uint32_t*) ADDR_FLASH_PAGE_101;
-	return *p_control_mode;
+	return * p_control_mode;
 }
 
 uint8_t get_wind_mode(){
@@ -145,18 +145,18 @@ void wind_control(TIM_HandleTypeDef tim_handle, WIND_MODE wind_mode){
 void default_state(){
 	/*
 	 *@brief check correctness of the flash memory storing state variables and fix
-	 */
+	 */ 	
 	uint32_t* p_power = (uint32_t*) ADDR_FLASH_PAGE_102;
 	uint32_t* p_control_mode = (uint32_t*) ADDR_FLASH_PAGE_101;
 	uint32_t* p_wind_mode = (uint32_t*) ADDR_FLASH_PAGE_100;
 	if(*p_power != ON && *p_power != OFF){
-		mutate_power(OFF);
+		modify_power(OFF);
 	}
 	if(*p_control_mode != AUTOMATIC && *p_control_mode != MANUAL){
-		mutate_control_mode(AUTOMATIC);
+		modify_control_mode(AUTOMATIC);
 	}
 	if(*p_wind_mode != LEVEL_0 && *p_wind_mode != LEVEL_1 && *p_wind_mode != LEVEL_2){
-		mutate_wind_mode(LEVEL_0);
+		modify_wind_mode(LEVEL_0);
 	}
 }
 

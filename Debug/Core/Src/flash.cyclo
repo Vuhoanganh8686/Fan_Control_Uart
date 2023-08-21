@@ -1,7 +1,7 @@
 flash.c:26:6:flash_erase	1
-flash.c:44:6:mutate_power	4
-flash.c:68:6:mutate_control_mode	3
-flash.c:86:6:mutate_wind_mode	2
+flash.c:44:6:modify_power	4
+flash.c:68:6:modify_control_mode	3
+flash.c:86:6:modify_wind_mode	2
 flash.c:102:9:get_power	1
 flash.c:110:9:get_control_mode	1
 flash.c:118:9:get_wind_mode	1

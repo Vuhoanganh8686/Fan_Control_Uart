@@ -10,14 +10,14 @@
 #include <stdio.h>
 
 
-POWER power = OFF;
-WIND_MODE wind_mode = LEVEL_0;
-CONTROL_MODE control_mode = AUTOMATIC;
+// POWER power = OFF;
+// WIND_MODE wind_mode = LEVEL_0;
+// CONTROL_MODE control_mode = AUTOMATIC;
 
 
 uint8_t handle_message(unsigned char* received_buffer, unsigned char* sent_buffer) {
 
-    *sent_buffer = 0x02;
+
     uint8_t send_length;
     uint8_t* stx = received_buffer;
     if(*stx != 0x02){
@@ -31,6 +31,7 @@ uint8_t handle_message(unsigned char* received_buffer, unsigned char* sent_buffe
 	uint8_t sent_data_length;
 	uint8_t received_data_length;
     
+	*sent_buffer = 0x02;
     switch (*txRxID) {
         case FRAME_TURN_ON_OFF:
             process_power_message(received_buffer, sent_buffer);
@@ -51,16 +52,16 @@ uint8_t handle_message(unsigned char* received_buffer, unsigned char* sent_buffe
             break;
         
         case FRAME_READ_STATUS:
-            return process_states_request_message(received_buffer, sent_buffer);
             received_data_length = 0;
             sent_data_length =  process_states_request_message(received_buffer, sent_buffer);
+			break;
         
         default:
             send_length = 0;
             goto error_msg;
     }
 
-    *sent_frame_type = *txRxID+ 0x80;
+    *sent_frame_type = *txRxID + 0x80;
 	*p_sent_data_length = sent_data_length;
 
     uint8_t* received_ETX = received_buffer + 3 + received_data_length;
@@ -77,27 +78,34 @@ uint8_t handle_message(unsigned char* received_buffer, unsigned char* sent_buffe
 }
 
 void process_power_message(unsigned char* received_buffer, unsigned char* sent_buffer) {
-    if (check_message_data_length(received_buffer, 1)) {
+    if (check_message_data_length(received_buffer, 1))
+	{
+		goto error_msg;
+	}
     uint8_t* received_data = received_buffer + 3;
 	uint8_t* sent_data = sent_buffer + 3;
 	if(*received_data == OFF){
-		mutate_power(OFF);
+		modify_power(OFF);
 		*sent_data = 0x00;
 	}
 	else if(*received_data == ON){
-		mutate_power(ON);
+		modify_power(ON);
 		*sent_data = 0x00;
 	}
 	else{
 		*sent_data = 0xFF;
 	}
-    } 
-}
+	error_msg : return;
+} 
+
 
 void process_control_mode_message(unsigned char* received_buffer, unsigned char* sent_buffer) {
     // Implement logic to process control mode message
     // Update control_mode and sent_buf accordingly
-    if (check_message_data_length(received_buffer, 1)){
+    if (check_message_data_length(received_buffer, 1))
+	{
+		goto error_msg;
+	}
     uint8_t* received_data = received_buffer + 3;
 	uint8_t* sent_data = sent_buffer + 3;
 	if(get_power() == OFF){
@@ -105,23 +113,25 @@ void process_control_mode_message(unsigned char* received_buffer, unsigned char*
 		goto error_msg;
 	}
 	if(*received_data == AUTOMATIC || *received_data == MANUAL){
-		mutate_control_mode(*received_data);
+		modify_control_mode(*received_data);
 		*sent_data = 0x00;
 	}
 	else{
 		*sent_data = 0xFF;
 	}
-} goto error_msg;
+	error_msg : return;
+} 
 
-error_msg: return;
 
-}
+
 
 void process_wind_mode_message(unsigned char* received_buffer, unsigned char* sent_buffer) {
     // Implement logic to process wind mode message
     // Update wind_mode and sent_buf accordingly
     if (check_message_data_length(received_buffer, 1))
-    {
+	{
+		goto error_msg;
+	}
     uint8_t* received_data = received_buffer + 3;
 	uint8_t* sent_data = sent_buffer + 3;
 	if(get_power() == OFF){
@@ -130,17 +140,16 @@ void process_wind_mode_message(unsigned char* received_buffer, unsigned char* se
 	}
 
 	if(*received_data == LEVEL_0 || *received_data == LEVEL_1 || *received_data == LEVEL_2){
-		mutate_wind_mode(*received_data);
+		modify_wind_mode(*received_data);
 		*sent_data = 0x00;
-		mutate_control_mode(MANUAL);
+		modify_control_mode(MANUAL);
 	}
 	else{
 		*sent_data = 0xFF;
 	}
 	error_msg: return;
-    }
-
 }
+
 
 uint8_t process_states_request_message(unsigned char* received_buffer, unsigned char* sent_buffer) {
     // Implement logic to process states request message
