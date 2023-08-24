@@ -6,6 +6,8 @@
  */
 
 #include "test_flash.h"
+#include "stdio.h"
+extern void initialise_monitor_handles(void);
 
 void print_state(uint8_t state){
 	printf("Actual:   %d\n", state);
@@ -13,6 +15,7 @@ void print_state(uint8_t state){
 void test_get(){
 	// Test case 1
 	modify_power(OFF);
+	initialise_monitor_handles();
 	printf("Expected: 0\n");
 	print_state(get_power());
 	printf("\n");
@@ -27,8 +30,10 @@ void test_get(){
 void test_mutate(){
 	//Test case 1
 	modify_power(OFF);
+	initialise_monitor_handles();
 	printf("Expected: 0\n");
 	print_state(get_power());
+	initialise_monitor_handles();
 	printf("\n");
 
 	//Test case 2
